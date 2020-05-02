@@ -27,8 +27,8 @@ if __name__ == "__main__":
     start = False
     counter = 0
 
-    # set a finite counter to prevent infinite loop in case user cannot exit from a mess of clicking...lol
-    while counter < 100000000000:
+    # set a counter to 2000 (0.06*2000=120s) to prevent infinite loop in case user cannot exit from a mess of clicking...lol
+    while counter < 2000:
         sct.get_pixels(mon)
         img = np.array(Image.frombytes('RGB', (sct.width, sct.height), sct.image))
 
@@ -49,7 +49,6 @@ if __name__ == "__main__":
                     nn = find_different(this)
                     for num, (x, y, r) in enumerate(circles):
                         if num == nn:
-                            point = pyautogui.position()
                             pyautogui.click(left + (x / 2), top + (y / 2), 1)
 
                             cv2.circle(img, (x, y), r, (0, 255, 0), 4)
