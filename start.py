@@ -13,19 +13,21 @@ def find_different(arr):
     else:
         return 0
 
-originalX = 480
-originalY = 600
+
+width = 480
+height = 600
 top = 300
 left = 800
 
 currentR = 0
 
-mon = {'top': top, 'left': left, 'width': originalX, 'height': originalY}
+mon = {'top': top, 'left': left, 'width': width, 'height': height}
 
 sct = mss()
-print(pyautogui.size()[0])
 start = False
 counter = 0
+
+# set a finite counter to prevent infinite loop in case user cannot exit from a mess of clicking...lol
 while counter < 100000000000:
     sct.get_pixels(mon)
     img = np.array(Image.frombytes('RGB', (sct.width, sct.height), sct.image))
@@ -47,9 +49,7 @@ while counter < 100000000000:
                 nn = find_different(this)
                 for num, (x, y, r) in enumerate(circles):
                     if num == nn:
-                        point = pyautogui.position()
                         pyautogui.click(top+x/2, left+y/2, 1)
-
                         cv2.circle(img, (x, y), r, (0, 255, 0), 4)
                         cv2.rectangle(img, (x - 5, y - 5), (x + 5, y + 5), (0, 128, 255), -1)
 
