@@ -14,52 +14,56 @@ def find_different(arr):
         return 0
 
 
-width = 480
-height = 600
-top = 300
-left = 800
+if __name__ == "__main__":
 
-mon = {'top': top, 'left': left, 'width': width, 'height': height}
+    width = 480
+    height = 600
+    top = 300
+    left = 800
 
-sct = mss()
-start = False
-counter = 0
+    mon = {'top': top, 'left': left, 'width': width, 'height': height}
 
-# set a finite counter to prevent infinite loop in case user cannot exit from a mess of clicking...lol
-while counter < 100000000000:
-    sct.get_pixels(mon)
-    img = np.array(Image.frombytes('RGB', (sct.width, sct.height), sct.image))
+    sct = mss()
+    start = False
+    counter = 0
 
-    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    circles = cv2.HoughCircles(gray, cv2.HOUGH_GRADIENT, 1.2, 10)
-    if start:
-        try:
-            counter += 1
-            if circles is not None:
-                # convert the (x, y) coordinates and radius of the circles to integers
-                circles = np.round(circles[0, :]).astype("int")
-                # loop over the (x, y) coordinates and radius of the circles
-                this = []
-                for (x, y, r) in circles:
-                    this.append(list(img[y, x, :]))
-                    # draw the circle in the output image, then draw a rectangle
-                    # corresponding to the center of the circle
-                nn = find_different(this)
-                for num, (x, y, r) in enumerate(circles):
-                    if num == nn:
-                        pyautogui.click(top+x/2, left+y/2, 1)
-                        cv2.circle(img, (x, y), r, (0, 255, 0), 4)
-                        cv2.rectangle(img, (x - 5, y - 5), (x + 5, y + 5), (0, 128, 255), -1)
+    # set a finite counter to prevent infinite loop in case user cannot exit from a mess of clicking...lol
+    while counter < 100000000000:
+        sct.get_pixels(mon)
+        img = np.array(Image.frombytes('RGB', (sct.width, sct.height), sct.image))
 
-        except Exception as e:
-            print(e)
+        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        circles = cv2.HoughCircles(gray, cv2.HOUGH_GRADIENT, 1.2, 10)
+        if start:
+            try:
+                counter += 1
+                if circles is not None:
+                    # convert the (x, y) coordinates and radius of the circles to integers
+                    circles = np.round(circles[0, :]).astype("int")
+                    # loop over the (x, y) coordinates and radius of the circles
+                    this = []
+                    for (x, y, r) in circles:
+                        this.append(list(img[y, x, :]))
+                        # draw the circle in the output image, then draw a rectangle
+                        # corresponding to the center of the circle
+                    nn = find_different(this)
+                    for num, (x, y, r) in enumerate(circles):
+                        if num == nn:
+                            point = pyautogui.position()
+                            pyautogui.click(left + (x / 2), top + (y / 2), 1)
 
-    cv2.imshow('test', np.array(img))
+                            cv2.circle(img, (x, y), r, (0, 255, 0), 4)
+                            cv2.rectangle(img, (x - 5, y - 5), (x + 5, y + 5), (0, 128, 255), -1)
 
-    if cv2.waitKey(1) & 0xFF == ord('s'):
-        start = start is False
+            except Exception as e:
+                print(e)
 
-    if cv2.waitKey(1) & 0xFF == ord('q'):
-        cv2.destroyAllWindows()
-        break
-    sleep(0.06)
+        cv2.imshow('test', np.array(img))
+
+        if cv2.waitKey(1) & 0xFF == ord('s'):
+            start = start is False
+
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            cv2.destroyAllWindows()
+            break
+        sleep(0.06)
