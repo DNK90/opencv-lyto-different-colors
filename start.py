@@ -19,8 +19,6 @@ height = 600
 top = 300
 left = 800
 
-currentR = 0
-
 mon = {'top': top, 'left': left, 'width': width, 'height': height}
 
 sct = mss()
